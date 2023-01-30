@@ -22,6 +22,10 @@ func main() {
 		DisableFlagsInUseLine: true,
 		CompletionOptions:     cobra.CompletionOptions{HiddenDefaultCmd: true},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if cmd.Flags().Lookup(_flagBrightness).Changed || cmd.Flags().Lookup(_flagTemperature).Changed {
+				return handleState(-1, cmd.Flags())
+			}
+
 			addr, err := cmd.Flags().GetIP(_flagAddress)
 			if err != nil {
 				return err
@@ -74,7 +78,10 @@ func handleState(on int, flags *pflag.FlagSet) error {
 		return err
 	}
 
-	l := &Light{On: &on}
+	l := &Light{}
+	if on == 0 || on == 1 {
+		l.On = &on
+	}
 
 	if flags.Lookup(_flagBrightness).Changed {
 		b, err := flags.GetInt(_flagBrightness)
