@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"math"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -96,11 +95,11 @@ func handleState(on int, flags *pflag.FlagSet) error {
 			return err
 		}
 
-		if t < 2900 || t > 7000 {
-			return errors.New("incorrect temperature")
+		t, err = KelvinToAPI(t)
+		if err != nil {
+			return err
 		}
 
-		t = int(math.Round(1_000_000 / float64(t)))
 		l.Temperature = &t
 	}
 
