@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -50,21 +51,7 @@ func (c *Client) GetLight() (*Light, error) {
 	}
 	defer resp.Body.Close()
 
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var r Request
-	if err := json.Unmarshal(b, &r); err != nil {
-		return nil, err
-	}
-
-	if len(r.Lights) == 0 {
-		return nil, errors.New("malformed response")
-	}
-
-	return r.Lights[0], nil
+	return parseBody(resp.Body)
 }
 
 func (c *Client) UpdateLight(l *Light) error {
@@ -92,4 +79,22 @@ func (c *Client) UpdateLight(l *Light) error {
 
 func (c *Client) url() string {
 	return fmt.Sprintf("http://%s:9123/elgato/lights", c.addr.String())
+}
+
+func parseBody(r io.Reader) (*Light, error) {
+	b, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+
+	var req Request
+	if err := json.Unmarshal(b, &req); err != nil {
+		return nil, err
+	}
+
+	if len(req.Lights) == 0 {
+		return nil, errors.New("malformed response")
+	}
+
+	return req.Lights[0], nil
 }
