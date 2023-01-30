@@ -25,15 +25,23 @@ type Light struct {
 var _ fmt.Stringer = (*Light)(nil)
 
 func (l *Light) String() string {
-	const format = "Light{On: %s, Brightness: %s, Temperature: %s}\n"
-	return fmt.Sprintf(format, toString(l.On), toString(l.Brightness), toString(l.Temperature))
-}
-
-func toString(x *int) string {
-	if x == nil {
-		return "<nil>"
+	on := "<nil>"
+	if l.On != nil {
+		on = strconv.Itoa(*l.On)
 	}
-	return strconv.Itoa(*x)
+
+	b := "<nil>"
+	if l.Brightness != nil {
+		b = strconv.Itoa(*l.Brightness)
+	}
+
+	t := "<nil>"
+	if l.Brightness != nil {
+		t = strconv.Itoa(APIToKelvin(*l.Temperature))
+	}
+
+	const format = "On: %s\nBrightness: %s%%\nTemperature: %sK"
+	return fmt.Sprintf(format, on, b, t)
 }
 
 type Client struct {
