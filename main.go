@@ -103,5 +103,12 @@ func handleState(on int, flags *pflag.FlagSet) error {
 		l.Temperature = &t
 	}
 
-	return NewClient(addr).UpdateLight(l)
+	result, err := NewClient(addr).UpdateLight(l)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(result)
+
+	return nil
 }

@@ -62,27 +62,28 @@ func (c *Client) GetLight() (*Light, error) {
 	return parseBody(resp.Body)
 }
 
-func (c *Client) UpdateLight(l *Light) error {
+func (c *Client) UpdateLight(l *Light) (*Light, error) {
 	b, err := json.Marshal(Request{Lights: []*Light{l}})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req, err := http.NewRequest(http.MethodPut, c.url(), bytes.NewReader(b))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("request failed: %s", resp.Status)
+		return nil, fmt.Errorf("request failed: %s", resp.Status)
 	}
+	defer resp.Body.Close()
 
-	return nil
+	return parseBody(resp.Body)
 }
 
 func (c *Client) url() string {
