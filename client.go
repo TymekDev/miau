@@ -2,11 +2,14 @@ package main
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 	"io"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -48,6 +51,8 @@ type Client struct {
 	addr net.IP
 }
 
+var _ http.Handler = (*Client)(nil)
+
 func NewClient(addr net.IP) *Client {
 	return &Client{addr: addr}
 }
@@ -84,6 +89,22 @@ func (c *Client) UpdateLight(l *Light) (*Light, error) {
 	defer resp.Body.Close()
 
 	return parseBody(resp.Body)
+}
+
+//go:embed index.html
+var website string
+
+func (c *Client) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	t, err := template.New("").Parse(website)
+	if err != nil {
+		log.Println("[ERROR]", err)
+		return
+	}
+
+	if err := t.Execute(w, c.url()); err != nil {
+		log.Println("[ERROR]", err)
+		return
+	}
 }
 
 func (c *Client) url() string {

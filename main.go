@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -12,6 +14,7 @@ import (
 const (
 	_flagAddress     = "addr"
 	_flagBrightness  = "brightness"
+	_flagPort        = "port"
 	_flagTemperature = "temperature"
 )
 
@@ -55,7 +58,29 @@ func main() {
 		},
 	}
 
-	cmdRoot.AddCommand(cmdOn, cmdOff)
+	cmdServe := &cobra.Command{
+		Use:   "serve",
+		Short: "Serve a webpage for controlling Elgato Light",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			addr, err := cmd.Flags().GetIP(_flagAddress)
+			if err != nil {
+				return err
+			}
+
+			port, err := cmd.Flags().GetInt(_flagPort)
+			if err != nil {
+				return err
+			}
+
+			log.Printf("[INFO] listening on port :%d\n", port)
+
+			return http.ListenAndServe(fmt.Sprint(":", port), NewClient(addr))
+		},
+	}
+
+	cmdServe.Flags().IntP(_flagPort, "p", 9123, "port to listen on")
+
+	cmdRoot.AddCommand(cmdOn, cmdOff, cmdServe)
 	cmdRoot.PersistentFlags().IPP(_flagAddress, "a", nil, "IP address of the light")
 	cmdRoot.PersistentFlags().IntP(_flagBrightness, "b", 0, "brightness in percent; a value between 0 and 100")
 	cmdRoot.PersistentFlags().IntP(_flagTemperature, "t", 0, "temperature in Kelvins; a value between 2900 and 7000")
