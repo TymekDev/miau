@@ -7,11 +7,35 @@
     <title>Elgato Light</title>
   </head>
   <script>
-    const lightOn = () => {
-      console.log({{ . }})
-    }
+    const lightState = (x) => {
+      fetch("/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ on: x }),
+      });
+    };
   </script>
+  <style>
+    body {
+      align-items: center;
+      display: flex;
+      flex-flow: column;
+      height: 100vh;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+      row-gap: 1rem;
+    }
+
+    button {
+      font-size: 1.25rem;
+      padding: 2rem 4rem;
+    }
+  </style>
   <body>
-    <button onclick="lightOn()">Click</button>
+    <button onclick="lightState(1)">On</button>
+    <button onclick="lightState(0)">Off</button>
   </body>
 </html>

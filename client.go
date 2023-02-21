@@ -95,6 +95,27 @@ func (c *Client) UpdateLight(l *Light) (*Light, error) {
 var website string
 
 func (c *Client) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPut {
+		b, err := io.ReadAll(r.Body)
+		if err != nil {
+			log.Println("[ERROR]", err)
+			return
+		}
+
+		var l Light
+		if err := json.Unmarshal(b, &l); err != nil {
+			log.Println("[ERROR]", err)
+			return
+		}
+
+		if _, err := c.UpdateLight(&l); err != nil {
+			log.Println("[ERROR]", err)
+			return
+		}
+
+		return
+	}
+
 	t, err := template.New("").Parse(website)
 	if err != nil {
 		log.Println("[ERROR]", err)
