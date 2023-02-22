@@ -116,13 +116,22 @@ func (c *Client) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.New("").Parse(website)
+	l, err := c.GetLight()
 	if err != nil {
 		log.Println("[ERROR]", err)
 		return
 	}
 
-	if err := t.Execute(w, c.url()); err != nil {
+	t, err := template.New("").Funcs(template.FuncMap{
+		"Enabled":     func() bool { return *l.On == 1 },
+		"APIToKelvin": APIToKelvin,
+	}).Parse(website)
+	if err != nil {
+		log.Println("[ERROR]", err)
+		return
+	}
+
+	if err := t.Execute(w, l); err != nil {
 		log.Println("[ERROR]", err)
 		return
 	}

@@ -14,7 +14,7 @@
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ on: x }),
-      });
+      }).then(() => location.reload());
     };
   </script>
   <style>
@@ -22,6 +22,7 @@
       align-items: center;
       display: flex;
       flex-flow: column;
+      font-family: sans-serif;
       height: 100vh;
       justify-content: center;
       margin: 0;
@@ -33,9 +34,29 @@
       font-size: 1.25rem;
       padding: 2rem 4rem;
     }
+
+    dt,
+    dd {
+      display: inline;
+      margin: 0;
+    }
   </style>
   <body>
-    <button onclick="lightState(1)">On</button>
-    <button onclick="lightState(0)">Off</button>
+    <button onclick="lightState(1)" {{ if Enabled }}disabled{{ end }}>
+      On
+    </button>
+    <button onclick="lightState(0)" {{ if not Enabled }}disabled{{ end }}>
+      Off
+    </button>
+    <dl>
+      <div>
+        <dt>Brightness</dt>
+        <dd>{{ .Brightness }}%</dd>
+      </div>
+      <div>
+        <dt>Temperature</dt>
+        <dd>{{ APIToKelvin .Temperature }}K</dd>
+      </div>
+    </dl>
   </body>
 </html>
