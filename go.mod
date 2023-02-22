@@ -1,4 +1,4 @@
-module git.sr.ht/~tymek/elgato
+module git.sr.ht/~tymek/miau
 
 go 1.19
 

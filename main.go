@@ -20,8 +20,8 @@ const (
 
 func main() {
 	cmdRoot := &cobra.Command{
-		Use:               "elgato",
-		Short:             "Control Elgato light",
+		Use:               "miau",
+		Short:             "Control Elgato Key Light",
 		CompletionOptions: cobra.CompletionOptions{HiddenDefaultCmd: true},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if cmd.Flags().Lookup(_flagBrightness).Changed || cmd.Flags().Lookup(_flagTemperature).Changed {
@@ -45,14 +45,14 @@ func main() {
 	}
 	cmdOn := &cobra.Command{
 		Use:   "on",
-		Short: "Turn Elgato light ON",
+		Short: "Turn the light ON",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return handleState(1, cmd.Flags())
 		},
 	}
 	cmdOff := &cobra.Command{
 		Use:   "off",
-		Short: "Turn Elgato light OFF",
+		Short: "Turn the light OFF",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return handleState(0, cmd.Flags())
 		},
@@ -60,7 +60,7 @@ func main() {
 
 	cmdServe := &cobra.Command{
 		Use:   "serve",
-		Short: "Serve a webpage for controlling Elgato Light",
+		Short: "Serve a webpage for controlling Elgato Key Light",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			addr, err := cmd.Flags().GetIP(_flagAddress)
 			if err != nil {
