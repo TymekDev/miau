@@ -1,4 +1,4 @@
-module git.sr.ht/~tymek/elgato-cli
+module git.sr.ht/~tymek/elgato
 
 go 1.19
 

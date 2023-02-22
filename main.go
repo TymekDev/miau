@@ -20,7 +20,7 @@ const (
 
 func main() {
 	cmdRoot := &cobra.Command{
-		Use:               "elgato-cli",
+		Use:               "elgato",
 		Short:             "Control Elgato light",
 		CompletionOptions: cobra.CompletionOptions{HiddenDefaultCmd: true},
 		RunE: func(cmd *cobra.Command, args []string) error {
