@@ -72,7 +72,7 @@ func main() {
 				return err
 			}
 
-			log.Printf("[INFO] listening on port :%d\n", port)
+			log.Printf("INFO listening on port :%d\n", port)
 
 			return http.ListenAndServe(fmt.Sprint(":", port), NewClient(addr))
 		},
