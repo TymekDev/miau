@@ -6,17 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>miau - Control Elgato Key Light</title>
   </head>
-  <script>
-    const lightState = (x) => {
-      fetch("/", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ on: x }),
-      }).then(() => location.reload());
-    };
-  </script>
   <style>
     body {
       align-items: center;
@@ -30,33 +19,42 @@
       row-gap: 1rem;
     }
 
-    button {
+    button[name="on"] {
       font-size: 1.25rem;
       padding: 2rem 4rem;
     }
 
-    dt,
+    div + div {
+      margin-top: 1rem;
+    }
+
     dd {
-      display: inline;
       margin: 0;
     }
   </style>
   <body>
-    <button onclick="lightState(1)" {{ if Enabled }}disabled{{ end }}>
-      On
-    </button>
-    <button onclick="lightState(0)" {{ if not Enabled }}disabled{{ end }}>
-      Off
-    </button>
-    <dl>
-      <div>
-        <dt>Brightness</dt>
-        <dd>{{ .Brightness }}%</dd>
-      </div>
-      <div>
-        <dt>Temperature</dt>
-        <dd>{{ APIToKelvin .Temperature }}K</dd>
-      </div>
-    </dl>
+    <form method="post">
+      <button type="submit" name="on" value="1" {{ if Enabled }}disabled{{ end }}>
+        On
+      </button>
+      <button type="submit" name="on" value="0" {{ if not Enabled }}disabled{{ end }}>
+        Off
+      </button>
+      <dl>
+        <div>
+          <dt>Brightness [%]</dt>
+          <dd>
+            <input type="number" name="brightness" value="{{ .Brightness }}" min="0" max="100" required />
+          </dd>
+        </div>
+        <div>
+          <dt>Temperature [K]</dt>
+          <dd>
+            <input type="number" name="temperature" value="{{ APIToKelvin .Temperature }}" min="3000" max="7000" step="50" required />
+          </dd>
+        </div>
+      </dl>
+      <button type="submit">Update</button>
+    </form>
   </body>
 </html>

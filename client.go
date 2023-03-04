@@ -13,6 +13,8 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/schema"
 )
 
 type Request struct {
@@ -95,25 +97,32 @@ func (c *Client) UpdateLight(l *Light) (*Light, error) {
 var website string
 
 func (c *Client) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPut {
-		b, err := io.ReadAll(r.Body)
-		if err != nil {
+	if r.Method == http.MethodPost {
+		if err := r.ParseForm(); err != nil {
 			log.Println("ERROR", err)
 			return
 		}
 
+		d := schema.NewDecoder()
+		d.SetAliasTag("json")
+
 		var l Light
-		if err := json.Unmarshal(b, &l); err != nil {
+		if err := d.Decode(&l, r.Form); err != nil {
 			log.Println("ERROR", err)
 			return
 		}
+
+		temperature, err := KelvinToAPI(*l.Temperature)
+		if err != nil {
+			log.Println("ERROR", err)
+			return
+		}
+		l.Temperature = &temperature
 
 		if _, err := c.UpdateLight(&l); err != nil {
 			log.Println("ERROR", err)
 			return
 		}
-
-		return
 	}
 
 	l, err := c.GetLight()
