@@ -123,6 +123,9 @@ func (c *Client) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Println("ERROR", err)
 			return
 		}
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 
 	l, err := c.GetLight()
