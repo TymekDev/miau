@@ -13,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/schema"
 )
@@ -50,17 +51,23 @@ func (l *Light) String() string {
 }
 
 type Client struct {
-	addr net.IP
+	addr   net.IP
+	client *http.Client
 }
 
 var _ http.Handler = (*Client)(nil)
 
 func NewClient(addr net.IP) *Client {
-	return &Client{addr: addr}
+	return &Client{
+		addr: addr,
+		client: &http.Client{
+			Timeout: 5 * time.Second,
+		},
+	}
 }
 
 func (c *Client) GetLight() (*Light, error) {
-	resp, err := http.Get(c.url())
+	resp, err := c.client.Get(c.url())
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +87,7 @@ func (c *Client) UpdateLight(l *Light) (*Light, error) {
 		return nil, err
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
