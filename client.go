@@ -138,6 +138,8 @@ func (c *Client) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	l, err := c.GetLight()
 	if err != nil {
 		log.Println("ERROR", err)
+		err := fmt.Errorf("couldn't fetch light settings: %w", err)
+		http.Error(w, err.Error(), http.StatusRequestTimeout)
 		return
 	}
 
