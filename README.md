@@ -22,6 +22,7 @@ Flags:
   -b, --brightness int    brightness in percent; a value between 0 and 100
   -h, --help              help for miau
   -t, --temperature int   temperature in Kelvins; a value between 2900 and 7000
+  -v, --version           version for miau
 
 Use "miau [command] --help" for more information about a command.
 ```

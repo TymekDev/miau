@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/pflag"
 )
 
+var version string
+
 const (
 	_flagAddress     = "addr"
 	_flagBrightness  = "brightness"
@@ -22,6 +24,7 @@ func main() {
 	cmdRoot := &cobra.Command{
 		Use:               "miau",
 		Short:             "Control Elgato Key Light",
+		Version:           version,
 		CompletionOptions: cobra.CompletionOptions{HiddenDefaultCmd: true},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if cmd.Flags().Lookup(_flagBrightness).Changed || cmd.Flags().Lookup(_flagTemperature).Changed {
