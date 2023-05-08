@@ -3,6 +3,13 @@
 A simple CLI for controlling Elgato Key Light.
 Tested with a single Elgato Key Light Mini.
 
+## Installation
+Run `make` to compile `miau` and generate completions.
+Run `make install` to install `miau` and completions to `/usr/local/`.
+Clean up with `make clean` and `make uninstall`, respectively.
+
+To override `/usr/local/` PREFIX variable use `make -e PREFIX=/foo/bar/baz/`.
+
 ## Usage
 ```
 Control Elgato Key Light
@@ -16,6 +23,7 @@ Available Commands:
   off         Turn the light OFF
   on          Turn the light ON
   serve       Serve a webpage for controlling Elgato Key Light
+  settings    Update light's settings
 
 Flags:
   -a, --addr ip           IP address of the light
@@ -39,6 +47,25 @@ Usage:
 Flags:
   -h, --help       help for serve
   -p, --port int   port to listen on (default 9123)
+
+Global Flags:
+  -a, --addr ip           IP address of the light
+  -b, --brightness int    brightness in percent; a value between 0 and 100
+  -t, --temperature int   temperature in Kelvins; a value between 2900 and 7000
+```
+
+### Settings
+Currently only updating battery bypass setting is supported.
+
+```
+Running settings command without any flags will fetch and print the current settings.
+
+Usage:
+  miau settings [flags]
+
+Flags:
+      --bypass int   configure the light's battery bypass (0 or 1)
+  -h, --help         help for settings
 
 Global Flags:
   -a, --addr ip           IP address of the light
