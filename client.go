@@ -140,45 +140,6 @@ func (c *Client) SetBypass(bypass int) error {
 	return nil
 }
 
-func (c *Client) ToggleBypass() error {
-	resp, err := c.client.Get(c.url() + "/settings")
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	b, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	settings := &struct {
-		Battery struct {
-			Bypass int `json:"bypass"`
-		} `json:"battery"`
-	}{}
-	if err := json.Unmarshal(b, settings); err != nil {
-		return err
-	}
-
-	settings.Battery.Bypass = 1 - settings.Battery.Bypass
-	b, err = json.Marshal(settings)
-	if err != nil {
-		return err
-	}
-
-	req, err := http.NewRequest(http.MethodPut, c.url()+"/settings", bytes.NewReader(b))
-	if err != nil {
-		return err
-	}
-
-	if _, err := c.client.Do(req); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 //go:embed index.html
 var website string
 
