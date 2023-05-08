@@ -60,23 +60,36 @@ func main() {
 			return handleState(0, cmd.Flags())
 		},
 	}
-	cmdBypass := &cobra.Command{
-		Use:   "bypass",
-		Short: "Control battery bypass",
-	}
-	cmdBypass.AddCommand(
-		&cobra.Command{
-			Use:   "toggle",
-			Short: "Toggle battery bypass",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				addr, err := cmd.Flags().GetIP(_flagAddress)
+
+	cmdSettings := &cobra.Command{
+		Use:   "settings",
+		Short: "Update light's settings",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			addr, err := cmd.Flags().GetIP(_flagAddress)
+			if err != nil {
+				return err
+			}
+
+			c := NewClient(addr)
+			if !cmd.Flags().Lookup("bypass").Changed {
+				s, err := c.GetSettings()
 				if err != nil {
 					return err
 				}
+				fmt.Println(s)
+				return nil
+			}
 
-				return NewClient(addr).ToggleBypass()
-			},
-		})
+			bypass, err := cmd.Flags().GetBool("bypass")
+			if err != nil {
+				return err
+			}
+
+			return c.SetBypass(bypass)
+		},
+	}
+
+	cmdSettings.Flags().Bool("bypass", false, "bypass the light's battery")
 
 	cmdServe := &cobra.Command{
 		Use:   "serve",
@@ -100,7 +113,7 @@ func main() {
 
 	cmdServe.Flags().IntP(_flagPort, "p", 9123, "port to listen on")
 
-	cmdRoot.AddCommand(cmdOn, cmdOff, cmdBypass, cmdServe)
+	cmdRoot.AddCommand(cmdOn, cmdOff, cmdServe, cmdSettings)
 	cmdRoot.PersistentFlags().IPP(_flagAddress, "a", nil, "IP address of the light")
 	cmdRoot.PersistentFlags().IntP(_flagBrightness, "b", 0, "brightness in percent; a value between 0 and 100")
 	cmdRoot.PersistentFlags().IntP(_flagTemperature, "t", 0, "temperature in Kelvins; a value between 2900 and 7000")

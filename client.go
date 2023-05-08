@@ -99,6 +99,49 @@ func (c *Client) UpdateLight(l *Light) (*Light, error) {
 	return parseBody(resp.Body)
 }
 
+func (c *Client) GetSettings() (string, error) {
+	resp, err := c.client.Get(c.url() + "/settings")
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
+}
+
+// TODO: refactor to use single struct for all settings
+func (c *Client) SetBypass(on bool) error {
+	settings := &struct {
+		Battery struct {
+			Bypass int `json:"bypass"`
+		} `json:"battery"`
+	}{}
+	if on {
+		settings.Battery.Bypass = 1
+	}
+
+	b, err := json.Marshal(settings)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, c.url()+"/settings", bytes.NewReader(b))
+	if err != nil {
+		return err
+	}
+
+	if _, err := c.client.Do(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *Client) ToggleBypass() error {
 	resp, err := c.client.Get(c.url() + "/settings")
 	if err != nil {
