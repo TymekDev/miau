@@ -115,15 +115,13 @@ func (c *Client) GetSettings() (string, error) {
 }
 
 // TODO: refactor to use single struct for all settings
-func (c *Client) SetBypass(on bool) error {
+func (c *Client) SetBypass(bypass int) error {
 	settings := &struct {
 		Battery struct {
 			Bypass int `json:"bypass"`
 		} `json:"battery"`
 	}{}
-	if on {
-		settings.Battery.Bypass = 1
-	}
+	settings.Battery.Bypass = bypass
 
 	b, err := json.Marshal(settings)
 	if err != nil {

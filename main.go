@@ -64,6 +64,7 @@ func main() {
 	cmdSettings := &cobra.Command{
 		Use:   "settings",
 		Short: "Update light's settings",
+		Long:  "Running settings command without any flags will fetch and print the current settings.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			addr, err := cmd.Flags().GetIP(_flagAddress)
 			if err != nil {
@@ -77,19 +78,20 @@ func main() {
 					return err
 				}
 				fmt.Println(s)
-				return nil
 			}
 
-			bypass, err := cmd.Flags().GetBool("bypass")
+			bypass, err := cmd.Flags().GetInt("bypass")
 			if err != nil {
 				return err
 			}
-
+			if bypass != 0 && bypass != 1 {
+				return errors.New("invalid value: bypass must be 0 or 1")
+			}
 			return c.SetBypass(bypass)
 		},
 	}
 
-	cmdSettings.Flags().Bool("bypass", false, "bypass the light's battery")
+	cmdSettings.Flags().Int("bypass", 0, "configure the light's battery bypass (0 or 1)")
 
 	cmdServe := &cobra.Command{
 		Use:   "serve",
