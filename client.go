@@ -56,11 +56,11 @@ type Client struct {
 
 var _ http.Handler = (*Client)(nil)
 
-func NewClient(addr net.IP) *Client {
+func NewClient(addr net.IP, timeout time.Duration) *Client {
 	return &Client{
 		addr: addr,
 		client: &http.Client{
-			Timeout: 5 * time.Second,
+			Timeout: timeout,
 		},
 	}
 }

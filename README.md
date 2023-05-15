@@ -26,11 +26,12 @@ Available Commands:
   settings    Update light's settings
 
 Flags:
-  -a, --addr ip           IP address of the light
-  -b, --brightness int    brightness in percent; a value between 0 and 100
-  -h, --help              help for miau
-  -t, --temperature int   temperature in Kelvins; a value between 2900 and 7000
-  -v, --version           version for miau
+  -a, --addr ip            IP address of the light
+  -b, --brightness int     brightness in percent; a value between 0 and 100
+  -h, --help               help for miau
+  -t, --temperature int    temperature in Kelvins; a value between 2900 and 7000
+      --timeout duration   light API timeout duration (default 5s)
+  -v, --version            version for miau
 
 Use "miau [command] --help" for more information about a command.
 ```
@@ -49,9 +50,10 @@ Flags:
   -p, --port int   port to listen on (default 9123)
 
 Global Flags:
-  -a, --addr ip           IP address of the light
-  -b, --brightness int    brightness in percent; a value between 0 and 100
-  -t, --temperature int   temperature in Kelvins; a value between 2900 and 7000
+  -a, --addr ip            IP address of the light
+  -b, --brightness int     brightness in percent; a value between 0 and 100
+  -t, --temperature int    temperature in Kelvins; a value between 2900 and 7000
+      --timeout duration   light API timeout duration (default 5s)
 ```
 
 ### Settings
@@ -68,9 +70,10 @@ Flags:
   -h, --help         help for settings
 
 Global Flags:
-  -a, --addr ip           IP address of the light
-  -b, --brightness int    brightness in percent; a value between 0 and 100
-  -t, --temperature int   temperature in Kelvins; a value between 2900 and 7000
+  -a, --addr ip            IP address of the light
+  -b, --brightness int     brightness in percent; a value between 0 and 100
+  -t, --temperature int    temperature in Kelvins; a value between 2900 and 7000
+      --timeout duration   light API timeout duration (default 5s)
 ```
 
 ## Name

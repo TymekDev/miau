@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -36,7 +37,12 @@ func main() {
 				return err
 			}
 
-			l, err := NewClient(addr).GetLight()
+			timeout, err := cmd.Flags().GetDuration("timeout")
+			if err != nil {
+				return err
+			}
+
+			l, err := NewClient(addr, timeout).GetLight()
 			if err != nil {
 				return err
 			}
@@ -71,7 +77,12 @@ func main() {
 				return err
 			}
 
-			c := NewClient(addr)
+			timeout, err := cmd.Flags().GetDuration("timeout")
+			if err != nil {
+				return err
+			}
+
+			c := NewClient(addr, timeout)
 			if !cmd.Flags().Lookup("bypass").Changed {
 				s, err := c.GetSettings()
 				if err != nil {
@@ -102,6 +113,11 @@ func main() {
 				return err
 			}
 
+			timeout, err := cmd.Flags().GetDuration("timeout")
+			if err != nil {
+				return err
+			}
+
 			port, err := cmd.Flags().GetInt(_flagPort)
 			if err != nil {
 				return err
@@ -109,7 +125,7 @@ func main() {
 
 			log.Printf("INFO listening on port :%d\n", port)
 
-			return http.ListenAndServe(fmt.Sprint(":", port), NewClient(addr))
+			return http.ListenAndServe(fmt.Sprint(":", port), NewClient(addr, timeout))
 		},
 	}
 
@@ -119,6 +135,7 @@ func main() {
 	cmdRoot.PersistentFlags().IPP(_flagAddress, "a", nil, "IP address of the light")
 	cmdRoot.PersistentFlags().IntP(_flagBrightness, "b", 0, "brightness in percent; a value between 0 and 100")
 	cmdRoot.PersistentFlags().IntP(_flagTemperature, "t", 0, "temperature in Kelvins; a value between 2900 and 7000")
+	cmdRoot.PersistentFlags().Duration("timeout", 5*time.Second, "light API timeout duration")
 
 	if err := cmdRoot.MarkPersistentFlagRequired(_flagAddress); err != nil {
 		fmt.Println(err)
@@ -169,7 +186,12 @@ func handleState(on int, flags *pflag.FlagSet) error {
 		l.Temperature = &t
 	}
 
-	result, err := NewClient(addr).UpdateLight(l)
+	timeout, err := flags.GetDuration("timeout")
+	if err != nil {
+		return err
+	}
+
+	result, err := NewClient(addr, timeout).UpdateLight(l)
 	if err != nil {
 		return err
 	}
