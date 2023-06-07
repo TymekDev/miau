@@ -135,7 +135,7 @@ func main() {
 	cmdRoot.PersistentFlags().IPP(_flagAddress, "a", nil, "IP address of the light")
 	cmdRoot.PersistentFlags().IntP(_flagBrightness, "b", 0, "brightness in percent; a value between 0 and 100")
 	cmdRoot.PersistentFlags().IntP(_flagTemperature, "t", 0, "temperature in Kelvins; a value between 2900 and 7000")
-	cmdRoot.PersistentFlags().Duration("timeout", 5*time.Second, "light API timeout duration")
+	cmdRoot.PersistentFlags().Duration("timeout", 15*time.Second, "light API timeout duration")
 
 	if err := cmdRoot.MarkPersistentFlagRequired(_flagAddress); err != nil {
 		fmt.Println(err)

@@ -30,7 +30,7 @@ Flags:
   -b, --brightness int     brightness in percent; a value between 0 and 100
   -h, --help               help for miau
   -t, --temperature int    temperature in Kelvins; a value between 2900 and 7000
-      --timeout duration   light API timeout duration (default 5s)
+      --timeout duration   light API timeout duration (default 15s)
   -v, --version            version for miau
 
 Use "miau [command] --help" for more information about a command.
@@ -53,7 +53,7 @@ Global Flags:
   -a, --addr ip            IP address of the light
   -b, --brightness int     brightness in percent; a value between 0 and 100
   -t, --temperature int    temperature in Kelvins; a value between 2900 and 7000
-      --timeout duration   light API timeout duration (default 5s)
+      --timeout duration   light API timeout duration (default 15s)
 ```
 
 ### Settings
