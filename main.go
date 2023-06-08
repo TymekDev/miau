@@ -24,7 +24,7 @@ const (
 func main() {
 	cmdRoot := &cobra.Command{
 		Use:               "miau",
-		Short:             "Control Elgato Key Light",
+		Short:             "miau - Control Elgato Key Light from CLI",
 		Version:           version,
 		CompletionOptions: cobra.CompletionOptions{HiddenDefaultCmd: true},
 		RunE: func(cmd *cobra.Command, args []string) error {

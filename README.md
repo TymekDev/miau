@@ -12,7 +12,7 @@ To override `/usr/local/` PREFIX variable use `make -e PREFIX=/foo/bar/baz/`.
 
 ## Usage
 ```
-Control Elgato Key Light
+miau - Control Elgato Key Light from CLI
 
 Usage:
   miau [flags]
