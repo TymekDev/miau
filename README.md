@@ -4,8 +4,8 @@ A simple CLI for controlling Elgato Key Light.
 Tested with a single Elgato Key Light Mini.
 
 ## Installation
-Run `make` to compile `miau` and generate completions.
-Run `make install` to install `miau` and completions to `/usr/local/`.
+Run `make` to compile miau and generate completions.
+Run `make install` to install miau and completions to `/usr/local/`.
 Clean up with `make clean` and `make uninstall`, respectively.
 
 To override `/usr/local/` PREFIX variable use `make -e PREFIX=/foo/bar/baz/`.
