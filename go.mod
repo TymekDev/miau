@@ -1,4 +1,4 @@
-module git.sr.ht/~tymek/miau
+module github.com/TymekDev/miau
 
 go 1.19
 
